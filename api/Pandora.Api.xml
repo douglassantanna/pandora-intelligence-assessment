@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>api</name>
+    </assembly>
+    <members>
+        <member name="M:api.Controllers.PandoraController.GetAddedCars(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get all cars from the database
+            </summary>
+            <param name="sort">Sort by kenteken</param>
+            <param name="pageIndex">Page index</param>
+            <param name="pageSize">Page size</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

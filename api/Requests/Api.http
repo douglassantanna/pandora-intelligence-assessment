@@ -1,10 +1,13 @@
 @url = http://localhost:5011/api/pandora
-@url2 = https://opendata.rdw.nl/resource/m9d7-ebf2.json
-
+@authKey = pandoraassessment
 ###
 GET {{url}}/0002mj
 Content-Type: application/json
+Pandora-Api-Key: {{authKey}}
+
+
 ###
-GET {{url}}?pageSize=10&pageIndex=0&sort=asc
+GET {{url}}/addedcars?pageSize=10&pageIndex=0&sort=asc
 Content-Type: application/json
+Pandora-Api-Key: {{authKey}}
 

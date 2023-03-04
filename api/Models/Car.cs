@@ -6,8 +6,8 @@ public class Car
                string voertuigsoort,
                string eerste_kleur)
     {
-        Kenteken = kenteken;
-        Merk = merk;
+        Kenteken = kenteken ?? throw new ArgumentNullException(nameof(kenteken));
+        Merk = merk ?? throw new ArgumentNullException(nameof(merk));
         Voertuigsoort = voertuigsoort;
         Eerste_kleur = eerste_kleur;
     }
