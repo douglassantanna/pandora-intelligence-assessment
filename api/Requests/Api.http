@@ -1,0 +1,10 @@
+@url = http://localhost:5011/api/pandora
+@url2 = https://opendata.rdw.nl/resource/m9d7-ebf2.json
+
+###
+GET {{url}}/0002mj
+Content-Type: application/json
+###
+GET {{url}}?pageSize=10&pageIndex=0&sort=asc
+Content-Type: application/json
+
