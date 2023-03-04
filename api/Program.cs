@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
     {
         x.SwaggerDoc("v1",
                  new OpenApiInfo { Title = "Pandora.Api", Version = "v1" });
-        var xmlFile = "Pandora.Api.xml";
+        var xmlFile = "api.xml";
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         x.IncludeXmlComments(xmlPath);
     }
@@ -32,7 +32,10 @@ var app = builder.Build();
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(x =>
+        {
+            x.SwaggerEndpoint("/swagger/v1/swagger.json", "api v1");
+        });
     }
 
     app.UseHttpsRedirection();

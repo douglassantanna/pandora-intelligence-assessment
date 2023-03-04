@@ -25,16 +25,25 @@ public class OpenDataService : IOpenDataService
         var httpResult = await $"{_openDataSettings.Url}?kenteken={plate.ToUpper()}"
         .GetJsonAsync<IEnumerable<Car>>();
 
-        foreach (var car in httpResult)
+        if (httpResult.Count() == 0)
         {
-            if (await _carRepository.CarExists(car.Kenteken))
-            {
-                _logger.LogInformation($"Vehicle with plate: {plate} already exists in database");
-                return httpResult;
-            }
+            _logger.LogInformation($"Vehicle with plate: {plate} was not fount in open data");
+            return httpResult;
+
         }
-        _logger.LogInformation($"Vehicle with plate: {plate} does not exist in database, adding it to database");
-        await _carRepository.AddRangeAsync(httpResult);
-        return httpResult;
+        else
+        {
+            foreach (var car in httpResult)
+            {
+                if (await _carRepository.CarExists(car.Kenteken))
+                {
+                    _logger.LogInformation($"Vehicle with plate: {plate} already exists in database");
+                    return httpResult;
+                }
+            }
+            _logger.LogInformation($"Vehicle with plate: {plate} does not exist in database, adding it to database");
+            await _carRepository.AddRangeAsync(httpResult);
+            return httpResult;
+        }
     }
 }

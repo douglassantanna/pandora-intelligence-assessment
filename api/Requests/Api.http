@@ -1,13 +1,14 @@
+@dockerUrl = http://localhost:8080/api/pandora
 @url = http://localhost:5011/api/pandora
 @authKey = pandoraassessment
 ###
-GET {{url}}/0002mj
+GET {{dockerUrl}}/0002mj
 Content-Type: application/json
 Pandora-Api-Key: {{authKey}}
 
 
 ###
-GET {{url}}/addedcars?pageSize=10&pageIndex=0&sort=asc
+GET {{dockerUrl}}/addedcars?pageSize=10&pageIndex=0&sort=asc
 Content-Type: application/json
 Pandora-Api-Key: {{authKey}}
 
