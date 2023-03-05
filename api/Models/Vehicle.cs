@@ -1,7 +1,7 @@
 namespace api.Models;
-public class Car
+public class Vehicle
 {
-    public Car(string kenteken,
+    public Vehicle(string kenteken,
                string merk,
                string voertuigsoort,
                string eerste_kleur)

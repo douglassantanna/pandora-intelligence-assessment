@@ -17,10 +17,35 @@ var builder = WebApplication.CreateBuilder(args);
         var xmlFile = "api.xml";
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         x.IncludeXmlComments(xmlPath);
+        x.AddSecurityDefinition("Pandora-Api-Key", new OpenApiSecurityScheme
+        {
+            Name = "Pandora-Api-Key",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Description = "API key needed to access the endpoints",
+            Scheme = "ApiKey"
+        });
+        x.AddSecurityRequirement
+        (
+            new OpenApiSecurityRequirement
+                {
+                {
+                    new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Pandora-Api-Key"
+                            }
+                        },
+                        new string[] {}
+                }
+                }
+        );
     }
     );
     builder.Services.AddScoped<IOpenDataService, OpenDataService>();
-    builder.Services.AddScoped<ICarRepository, CarRepository>();
+    builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
     builder.Services.AddScoped<ApiKeyAuthFilter>();
     builder.Services.AddDbContext<Datacontext>(opt => opt.UseInMemoryDatabase("Database"));
     builder.Services.Configure<OpenDataSettings>(builder.Configuration.GetSection(nameof(OpenDataSettings)));
@@ -39,6 +64,8 @@ var app = builder.Build();
     }
 
     app.UseHttpsRedirection();
+
+    app.UseAuthentication();
 
     app.UseAuthorization();
 

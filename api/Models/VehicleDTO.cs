@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace api.Models;
-public class CarDTO
+public class VehicleDTO
 {
+    [JsonIgnore]
     public int Id { get; set; }
     public string Kenteken { get; set; } = string.Empty;
     public string Merk { get; set; } = string.Empty;

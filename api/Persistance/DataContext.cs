@@ -7,5 +7,5 @@ public class Datacontext : DbContext
     public Datacontext(DbContextOptions<Datacontext> options) : base(options)
     {
     }
-    public DbSet<Car> Cars { get; set; } = null!;
+    public DbSet<Vehicle> Vehicles { get; set; } = null!;
 }

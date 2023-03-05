@@ -25,36 +25,36 @@ public class PandoraController : ControllerBase
     }
 
     /// <summary>
-    /// Get car info by plate
+    /// Get vehicle info by plate
     /// </summary>
-    /// <param name="plate">Car plate</param>
-    /// <response code="200">Returns the car info</response>
-    /// <response code="404">If the car is not found</response>
+    /// <param name="plate">Vehicle plate</param>
+    /// <response code="200">Returns the vehicle info</response>
+    /// <response code="404">If the vehicle is not found</response>
     /// <returns></returns>
     [HttpGet("{plate}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public async Task<ActionResult<IEnumerable<Car>>> GetCarInfo(string plate)
+    public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicleInfo(string plate)
     {
-        var car = await _openData.GetVehicleByPlate(plate);
-        if (car.Count() == 0)
+        var vehicle = await _openData.GetVehicleByPlate(plate);
+        if (vehicle is null)
         {
             return NotFound();
         }
-        return Ok(car);
+        return Ok(vehicle);
     }
 
     /// <summary>
-    /// Get all cars from the database
+    /// Get all vehicles from the database
     /// </summary>
     /// <param name="sort">Sort by plate</param>
     /// <param name="pageIndex">Page index</param>
     /// <param name="pageSize">Page size</param>
-    /// <response code="200">Returns the cars</response>
+    /// <response code="200">Returns the vehicles</response>
     /// <returns></returns>
-    [HttpGet("addedcars")]
-    public ActionResult<(IEnumerable<CarDTO>, Pagination<CarDTO>)> GetAddedCars(string sort = "desc",
-                                                                                int pageIndex = 1,
+    [HttpGet("addedvehicles")]
+    public ActionResult<(IEnumerable<VehicleDTO>, Pagination<VehicleDTO>)> QueryVehiclesFromDatabase(string sort = "desc",
+                                                                                int pageIndex = 0,
                                                                                 int pageSize = 10)
     {
         if (pageSize > _maxPageSize)
@@ -62,14 +62,14 @@ public class PandoraController : ControllerBase
             pageSize = _maxPageSize;
         }
 
-        var collection = _context.Cars.Select(car => new CarDTO
+        var collection = _context.Vehicles.Select(vehicle => new VehicleDTO
         {
-            Id = car.Id,
-            Kenteken = car.Kenteken,
-            Merk = car.Merk,
-            Voertuigsoort = car.Voertuigsoort,
-            Eerste_kleur = car.Eerste_kleur,
-        }).AsQueryable<CarDTO>();
+            Id = vehicle.Id,
+            Kenteken = vehicle.Kenteken,
+            Merk = vehicle.Merk,
+            Voertuigsoort = vehicle.Voertuigsoort,
+            Eerste_kleur = vehicle.Eerste_kleur,
+        }).AsQueryable<VehicleDTO>();
 
         if (sort == "desc")
         {
@@ -79,7 +79,7 @@ public class PandoraController : ControllerBase
         {
             collection = collection.OrderBy(c => c.Kenteken.ToLower());
         }
-        var pagination = new Pagination<CarDTO>(collection,
+        var pagination = new Pagination<VehicleDTO>(collection,
                                                 pageIndex,
                                                 pageSize);
 

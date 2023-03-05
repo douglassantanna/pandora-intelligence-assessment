@@ -11,40 +11,40 @@ namespace tests;
 
 public class OpenDataTests
 {
-    private readonly Mock<ICarRepository> _carRepositoryMock;
+    private readonly Mock<IVehicleRepository> _vehicleRepositoryMock;
     private readonly Mock<IOptions<OpenDataSettings>> _openDataSettingsMock;
     private readonly Mock<ILogger<OpenDataService>> _loggerMock;
 
     public OpenDataTests()
     {
-        _carRepositoryMock = new Mock<ICarRepository>();
+        _vehicleRepositoryMock = new Mock<IVehicleRepository>();
         _openDataSettingsMock = new Mock<IOptions<OpenDataSettings>>();
         _loggerMock = new Mock<ILogger<OpenDataService>>();
     }
     [Fact]
-    public async Task GetVehicleByPlate_ShouldReturnCars()
+    public async Task GetVehicleByPlate_ShouldReturnVehicles()
     {
         // Arrange
         var plate = "0002mj";
-        var expectedCars = new List<Car>()
+        var expectedVehicles = new List<Vehicle>()
         {
-            new Car("0002MJ","CHEVROLET","Personenauto","GROEN")
+            new Vehicle("0002MJ","CHEVROLET","Personenauto","GROEN")
         };
         var openDataSettings = new OpenDataSettings() { Url = "https://opendata.rdw.nl/resource/m9d7-ebf2.json" };
         _openDataSettingsMock.Setup(x => x.Value).Returns(openDataSettings);
         var httpTest = new HttpTest();
 
-        httpTest.RespondWithJson(expectedCars);
+        httpTest.RespondWithJson(expectedVehicles);
 
-        var openData = new OpenDataService(_carRepositoryMock.Object, _openDataSettingsMock.Object, _loggerMock.Object);
+        var openData = new OpenDataService(_vehicleRepositoryMock.Object, _openDataSettingsMock.Object, _loggerMock.Object);
 
         // Act
-        var actualCars = await openData.GetVehicleByPlate(plate);
+        var actualVehicles = await openData.GetVehicleByPlate(plate);
 
         // Assert
-        Assert.NotNull(actualCars);
-        Assert.Equal(expectedCars.Count, actualCars.Count());
-        Assert.Equal(expectedCars.First().Kenteken, actualCars.First().Kenteken);
+        Assert.NotNull(actualVehicles);
+        Assert.Equal(expectedVehicles.Count, actualVehicles.Count());
+        Assert.Equal(expectedVehicles.First().Kenteken, actualVehicles.First().Kenteken);
 
         httpTest.ShouldHaveCalled(Url.Combine(openDataSettings.Url, $"?kenteken={plate.ToUpper()}"))
                 .WithVerb(HttpMethod.Get)
@@ -52,7 +52,7 @@ public class OpenDataTests
     }
 
     [Fact]
-    public void TestCarConstructor()
+    public void TestVehicleConstructor()
     {
         // Arrange
         string expectedKenteken = "ABC123";
@@ -61,24 +61,24 @@ public class OpenDataTests
         string expectedEerste_kleur = "Blue";
 
         // Act
-        var car = new Car(expectedKenteken, expectedMerk, expectedVoertuigsoort, expectedEerste_kleur);
+        var vehicle = new Vehicle(expectedKenteken, expectedMerk, expectedVoertuigsoort, expectedEerste_kleur);
 
         // Assert
-        Assert.Equal(expectedKenteken, car.Kenteken);
-        Assert.Equal(expectedMerk, car.Merk);
-        Assert.Equal(expectedVoertuigsoort, car.Voertuigsoort);
-        Assert.Equal(expectedEerste_kleur, car.Eerste_kleur);
+        Assert.Equal(expectedKenteken, vehicle.Kenteken);
+        Assert.Equal(expectedMerk, vehicle.Merk);
+        Assert.Equal(expectedVoertuigsoort, vehicle.Voertuigsoort);
+        Assert.Equal(expectedEerste_kleur, vehicle.Eerste_kleur);
     }
 
     [Fact]
-    public void CreateCarWithNullValues_ShouldReturnNullException()
+    public void CreateVehicleWithNullValues_ShouldReturnNullException()
     {
         // Arrange
         string expectedKenteken = null;
         string expectedMerk = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => new Car(expectedKenteken, expectedMerk, "Sedan", "Blue"));
+        Assert.Throws<ArgumentNullException>(() => new Vehicle(expectedKenteken, expectedMerk, "Sedan", "Blue"));
     }
 
 }
